@@ -1,75 +1,68 @@
+// src/components/Bookshelf/Bookshelf.jsx
 import { useState } from 'react';
 
 const Bookshelf = () => {
-  // Initial list (you can change or remove these starting examples)
+  // initial list
   const [books, setBooks] = useState([
-    { title: 'Fourth Wing', author: 'Rebecca Yarros' },
-    { title: 'The Lion, the Witch and the Wardrobe', author: 'C.S. Lewis' },
+    { id: 1, title: 'Waiting To Exhale', author: 'Terry McMillian' },
+    { id: 2, title: 'Activate Your Greatness', author: 'Alex Toussaint' },
+    { id: 2, title: 'The Coldest Winter Ever', author: 'Sister Souljah' },
   ]);
 
-  // Controlled form state
+  // controlled form state
   const [newBook, setNewBook] = useState({ title: '', author: '' });
 
-  // Update controlled inputs as user types
+  // update controlled inputs
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target;       // name must be "title" or "author"
     setNewBook((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submit: add book, then reset fields
+  // add new book
   const handleSubmit = (e) => {
     e.preventDefault();
     const title = newBook.title.trim();
     const author = newBook.author.trim();
-    if (!title || !author) return; // simple guard
+    if (!title || !author) return;
 
-    setBooks((prev) => [...prev, { title, author }]);
-    setNewBook({ title: '', author: '' });
+    setBooks((prev) => [...prev, { id: Date.now(), title, author }]);
+    setNewBook({ title: '', author: '' });  // reset form
   };
 
   return (
     <div className="bookshelfDiv">
       <div className="formDiv">
         <h3>Add a Book</h3>
-
         <form onSubmit={handleSubmit}>
-          <label>
-            Title
-            <input
-              type="text"
-              name="title"
-              value={newBook.title}
-              onChange={handleInputChange}
-              placeholder="e.g., Dune"
-            />
-          </label>
+          <label htmlFor="title">Title</label>
+          <input
+            id="title"
+            name="title"
+            type="text"
+            value={newBook.title}
+            onChange={handleInputChange}
+            placeholder="e.g., Dune"
+          />
 
-          <label>
-            Author
-            <input
-              type="text"
-              name="author"
-              value={newBook.author}
-              onChange={handleInputChange}
-              placeholder="e.g., Frank Herbert"
-            />
-          </label>
+          <label htmlFor="author">Author</label>
+          <input
+            id="author"
+            name="author"
+            type="text"
+            value={newBook.author}
+            onChange={handleInputChange}
+            placeholder="e.g., Frank Herbert"
+          />
 
-          <button
-            type="submit"
-            disabled={!newBook.title.trim() || !newBook.author.trim()}
-          >
-            Add to shelf
-          </button>
+          <button type="submit">Add to Shelf</button>
         </form>
       </div>
 
       <div className="bookCardsDiv">
-        {books.length === 0 && <p>No books yet — add your first!</p>}
-        {books.map((book, idx) => (
-          <div className="bookCard" key={`${book.title}-${book.author}-${idx}`}>
-            <strong>{book.title}</strong>
-            <span>by {book.author}</span>
+        {books.map((book) => (
+          <div key={book.id} className="bookCard">
+            <h4 style={{ margin: '0 0 4px' }}>{book.title}</h4>
+            <p style={{ margin: 0 }}>by {book.author}</p>
           </div>
         ))}
       </div>
